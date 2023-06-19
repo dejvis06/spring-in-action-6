@@ -10,9 +10,15 @@ import java.util.List;
 import java.util.ArrayList;
 
 import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 
 @Data
+@Table
 public class TacoOrder {
+
+    @Id
+    private Long id;
 
     @NotBlank(message = "Delivery name is required")
     private String deliveryName;
