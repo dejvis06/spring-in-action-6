@@ -1,9 +1,6 @@
 package tacos.domain.entities;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -20,6 +17,7 @@ import lombok.Data;
 public class TacoOrder {
 
     @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
 
     @NotBlank(message = "Delivery name is required")
@@ -49,6 +47,9 @@ public class TacoOrder {
 
     @OneToMany(cascade = CascadeType.ALL)
     private List<Taco> tacos = new ArrayList<>();
+
+    @ManyToOne
+    private User user;
 
     public void addTaco(Taco taco) {
         this.tacos.add(taco);

@@ -3,9 +3,7 @@ package tacos.domain.entities;
 import java.time.Instant;
 import java.util.List;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
@@ -18,6 +16,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 public class Taco {
 
     @Id
+    @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
 
     @NotNull
