@@ -24,6 +24,7 @@ public class SecurityConfig {
                 .and()
                 .csrf()
                 .disable()
+                .headers().frameOptions().disable().and()
                 .build();
     }
 
