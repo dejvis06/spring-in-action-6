@@ -15,10 +15,12 @@ public class SecurityConfig {
         return http
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/design", "/orders").hasRole("USER")
+                        .requestMatchers("/", "/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin()
                 .loginPage("/login")
+                .defaultSuccessUrl("/design")
                 .and()
                 .csrf()
                 .disable()
