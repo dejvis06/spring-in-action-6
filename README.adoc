@@ -1,4 +1,4 @@
-= Spring in Action 5 Sample Code
+= Spring in Action 6 Sample Code
 
 This is my project built by reading https://www.manning.com/books/spring-in-action-sixth-edition[_Spring in Action, Sixth Edition_, by Craig Walls].
 
