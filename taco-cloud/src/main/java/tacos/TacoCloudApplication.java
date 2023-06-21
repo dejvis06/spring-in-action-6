@@ -24,21 +24,13 @@ public class TacoCloudApplication {
     }
 
     @Bean
-    public CommandLineRunner dataLoader(IngredientRepository ingredientRepository, TacoRepository tacoRepository, UserRepository userRepository, PasswordEncoder encoder) {
+    public CommandLineRunner dataLoader(IngredientRepository ingredientRepository, TacoRepository tacoRepository) {
         return new CommandLineRunner() {
             @Override
             public void run(String... args) {
                 addIngredientsAndTacos(ingredientRepository, tacoRepository);
-                addUser(userRepository, encoder.encode("password"));
             }
         };
-    }
-
-    private static void addUser(UserRepository userRepository, String password) {
-        userRepository.save(User.builder()
-                .username("buzz")
-                .password(password)
-                .build());
     }
 
     private static void addIngredientsAndTacos(IngredientRepository ingredientRepository, TacoRepository tacoRepository) {
