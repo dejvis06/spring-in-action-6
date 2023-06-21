@@ -2,22 +2,3 @@ spring:
   datasource:
     generate-unique-name: false
     name: tacocloud
-
-  security:
-    oauth2:
-      client:
-        registration:
-          taco-client:
-            provider: spring
-            client-id: taco-client
-            client-secret: secret
-            client-authentication-method: client_secret_basic
-            authorization-grant-type: authorization_code
-            redirect-uri: http://127.0.0.1:8080/login/oauth2/code/taco-client
-            scope: openid,profile
-            client-name: taco
-        provider:
-            spring:
-              authorization-uri: http://localhost:9000/oauth2/authorize
-              token-uri: http://localhost:9000/oauth2/token
-              jwk-set-uri: http://localhost:9000/oauth2/jwks
