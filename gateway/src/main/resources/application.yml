@@ -1,2 +1,11 @@
 server:
   port: 8443
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: taco-cloud
+          uri: http://localhost:8080
+          filters:
+            - TokenRelay=
