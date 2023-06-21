@@ -2,7 +2,13 @@ version: "3.9"
 services:
   taco-cloud:
     build:
-      context: ./
+      context: ./taco-cloud
       dockerfile: Dockerfile
     ports:
       - 8080:8080
+  authorization-server:
+    build:
+      context: ./authorization-server
+      dockerfile: Dockerfile
+    ports:
+      - 9000:9000
