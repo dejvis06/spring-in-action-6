@@ -7,6 +7,8 @@ spring:
       routes:
         - id: taco-cloud
           uri: http://localhost:8080
+          predicates:
+            - Path=/
           filters:
             - TokenRelay=
 
