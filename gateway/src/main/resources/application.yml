@@ -11,6 +11,12 @@ spring:
             - Path=/
           filters:
             - TokenRelay=
+        - id: taco-cloud/design
+          uri: http://localhost:8080/design
+          predicates:
+            - Path=/design
+          filters:
+            - TokenRelay=
 
   security:
     oauth2:
