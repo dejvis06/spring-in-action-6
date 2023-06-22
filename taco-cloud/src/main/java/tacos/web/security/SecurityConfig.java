@@ -5,14 +5,17 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import tacos.web.converters.JWTRoleConverter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
+
         http
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/design", "/orders").hasRole("USER")
@@ -21,7 +24,16 @@ public class SecurityConfig {
                         .requestMatchers("/", "/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
+                .oauth2ResourceServer()
+                .jwt();
+
         return http.build();
+    }
+
+    @Bean
+    public JwtAuthenticationConverter jwtAuthenticationConverter() {
+        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(new JWTRoleConverter());
+        return jwtAuthenticationConverter;
     }
 }
