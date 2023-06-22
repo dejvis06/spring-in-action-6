@@ -18,6 +18,7 @@ public class SecurityConfig {
                         .requestMatchers("/design", "/orders").hasRole("USER")
                         .requestMatchers(HttpMethod.POST, "/ingredients").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/ingredients/**").hasRole("ADMIN")
+                        .requestMatchers("/", "/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
