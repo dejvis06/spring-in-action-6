@@ -1,4 +1,4 @@
-package tacos.web;
+package com.example.web;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
