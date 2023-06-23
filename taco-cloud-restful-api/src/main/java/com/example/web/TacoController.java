@@ -5,8 +5,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import tacos.domain.entities.Taco;
-import tacos.domain.repositories.TacoRepository;
+import com.example.domain.entities.Taco;
+import com.example.domain.repositories.TacoRepository;
 
 import java.util.Optional;
 
