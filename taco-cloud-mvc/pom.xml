@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>taco-cloud</artifactId>
+	<artifactId>taco-cloud-mvc</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>taco-cloud</name>
+	<name>taco-cloud-mvc</name>
 	<description>Spring in Action, Sixth Edition</description>
 	<properties>
 		<java.version>17</java.version>
