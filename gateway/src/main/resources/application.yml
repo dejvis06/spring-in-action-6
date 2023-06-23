@@ -6,15 +6,15 @@ spring:
     gateway:
       routes:
         - id: taco-cloud
-          uri: http://localhost:8080
+          uri: http://localhost:8081/api/ingredients
           predicates:
-            - Path=/
+            - Path=/api/ingredients
           filters:
             - TokenRelay=
         - id: taco-cloud/design
-          uri: http://localhost:8080/design
+          uri: http://localhost:8081/api/tacos
           predicates:
-            - Path=/design
+            - Path=/api/tacos
           filters:
             - TokenRelay=
 
