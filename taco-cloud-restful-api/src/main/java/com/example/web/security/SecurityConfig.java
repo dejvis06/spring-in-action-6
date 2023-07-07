@@ -16,7 +16,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .anyRequest().hasRole("ADMIN")
+                        .anyRequest().hasRole("USER")
                 )
                 .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
 
