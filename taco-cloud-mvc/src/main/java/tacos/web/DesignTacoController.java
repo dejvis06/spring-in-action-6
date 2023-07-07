@@ -4,6 +4,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.web.reactive.function.client.ServerOAuth2AuthorizedClientExchangeFilterFunction;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -13,6 +17,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 import tacos.domain.entities.Ingredient;
 import tacos.domain.entities.Ingredient.Type;
 import tacos.domain.entities.Taco;
@@ -25,8 +31,16 @@ import jakarta.validation.Valid;
 @RequestMapping("/design")
 @SessionAttributes("tacoOrder")
 public class DesignTacoController {
+
+
+    final WebClient webClient;
+
+    public DesignTacoController(WebClient webClient) {
+        this.webClient = webClient;
+    }
+
     @ModelAttribute
-    public void addIngredientsToModel(Model model) {
+    public void addIngredientsToModel(Model model, @RegisteredOAuth2AuthorizedClient("taco-mvc") OAuth2AuthorizedClient authorizedClient) {
         List<Ingredient> ingredients = Arrays.asList(
                 new Ingredient("FLTO", "Flour Tortilla", Type.WRAP),
                 new Ingredient("COTO", "Corn Tortilla", Type.WRAP),
@@ -39,10 +53,24 @@ public class DesignTacoController {
                 new Ingredient("SLSA", "Salsa", Type.SAUCE),
                 new Ingredient("SRCR", "Sour Cream", Type.SAUCE)
         );
-        Type[] types = Type.values();
-        for (Type type : types) {
-            model.addAttribute(type.toString().toLowerCase(), filterByType(ingredients, type));
-        }
+
+        Flux<Ingredient> ingredientsFlux = this.webClient.get()
+                .uri("/ingredients")
+                .attributes(ServerOAuth2AuthorizedClientExchangeFilterFunction.oauth2AuthorizedClient(authorizedClient))
+                .retrieve()
+                .bodyToFlux(Ingredient.class);
+
+        ingredientsFlux.collectList().subscribe(ingredients1 -> {
+                    assert ingredients1.size() == 0;
+                    Type[] types = Type.values();
+                    for (Type type : types) {
+                        model.addAttribute(type.toString().toLowerCase(), filterByType(ingredients, type));
+                    }
+                },
+                error -> {
+
+                });
+
     }
 
     @ModelAttribute(name = "tacoOrder")
