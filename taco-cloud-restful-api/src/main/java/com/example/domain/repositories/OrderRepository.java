@@ -1,7 +1,7 @@
-package tacos.domain.repositories;
+package com.example.domain.repositories;
 
+import com.example.domain.entities.TacoOrder;
 import org.springframework.data.jpa.repository.JpaRepository;
-import tacos.domain.entities.TacoOrder;
 
 public interface OrderRepository extends JpaRepository<TacoOrder, Long> {
 }
