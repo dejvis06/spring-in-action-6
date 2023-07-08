@@ -20,7 +20,8 @@ public class SecurityConfig {
                 )
                 .oauth2Login(withDefaults())
                 .formLogin(withDefaults())
-                .oauth2Client(withDefaults());
+                .oauth2Client(withDefaults())
+                .csrf().disable();
         // @formatter:on
         return http.build();
     }
