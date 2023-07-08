@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.web.reactive.function.client.ServerOAuth2AuthorizedClientExchangeFilterFunction;
@@ -25,6 +24,7 @@ import tacos.domain.entities.Taco;
 import tacos.domain.entities.TacoOrder;
 
 import jakarta.validation.Valid;
+import tacos.domain.repositories.IngredientRepository;
 
 @Slf4j
 @Controller
@@ -34,25 +34,16 @@ public class DesignTacoController {
 
 
     final WebClient webClient;
+    final IngredientRepository ingredientRepository;
 
-    public DesignTacoController(WebClient webClient) {
+    public DesignTacoController(WebClient webClient, IngredientRepository ingredientRepository) {
         this.webClient = webClient;
+        this.ingredientRepository = ingredientRepository;
     }
 
     @ModelAttribute
     public void addIngredientsToModel(Model model, @RegisteredOAuth2AuthorizedClient("taco-mvc") OAuth2AuthorizedClient authorizedClient) {
-        List<Ingredient> ingredients = Arrays.asList(
-                new Ingredient("FLTO", "Flour Tortilla", Type.WRAP),
-                new Ingredient("COTO", "Corn Tortilla", Type.WRAP),
-                new Ingredient("GRBF", "Ground Beef", Type.PROTEIN),
-                new Ingredient("CARN", "Carnitas", Type.PROTEIN),
-                new Ingredient("TMTO", "Diced Tomatoes", Type.VEGGIES),
-                new Ingredient("LETC", "Lettuce", Type.VEGGIES),
-                new Ingredient("CHED", "Cheddar", Type.CHEESE),
-                new Ingredient("JACK", "Monterrey Jack", Type.CHEESE),
-                new Ingredient("SLSA", "Salsa", Type.SAUCE),
-                new Ingredient("SRCR", "Sour Cream", Type.SAUCE)
-        );
+        List<Ingredient> ingredients = ingredientRepository.findAll();
 
         Flux<Ingredient> ingredientsFlux = this.webClient.get()
                 .uri("/ingredients")
@@ -62,15 +53,14 @@ public class DesignTacoController {
 
         ingredientsFlux.collectList().subscribe(ingredients1 -> {
                     assert ingredients1.size() == 0;
-                    Type[] types = Type.values();
-                    for (Type type : types) {
-                        model.addAttribute(type.toString().toLowerCase(), filterByType(ingredients, type));
-                    }
                 },
                 error -> {
 
                 });
-
+        Type[] types = Type.values();
+        for (Type type : types) {
+            model.addAttribute(type.toString().toLowerCase(), filterByType(ingredients, type));
+        }
     }
 
     @ModelAttribute(name = "tacoOrder")
