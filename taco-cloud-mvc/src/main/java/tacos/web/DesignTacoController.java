@@ -34,6 +34,7 @@ public class DesignTacoController {
 
 
     final WebClient webClient;
+
     final IngredientRepository ingredientRepository;
 
     public DesignTacoController(WebClient webClient, IngredientRepository ingredientRepository) {
@@ -43,20 +44,15 @@ public class DesignTacoController {
 
     @ModelAttribute
     public void addIngredientsToModel(Model model, @RegisteredOAuth2AuthorizedClient("taco-mvc") OAuth2AuthorizedClient authorizedClient) {
-        List<Ingredient> ingredients = ingredientRepository.findAll();
 
-        Flux<Ingredient> ingredientsFlux = this.webClient.get()
+        List<Ingredient> ingredients = this.webClient.get()
                 .uri("/ingredients")
                 .attributes(ServerOAuth2AuthorizedClientExchangeFilterFunction.oauth2AuthorizedClient(authorizedClient))
                 .retrieve()
-                .bodyToFlux(Ingredient.class);
+                .bodyToFlux(Ingredient.class)
+                .collectList()
+                .block();
 
-        ingredientsFlux.collectList().subscribe(ingredients1 -> {
-                    assert ingredients1.size() == 0;
-                },
-                error -> {
-
-                });
         Type[] types = Type.values();
         for (Type type : types) {
             model.addAttribute(type.toString().toLowerCase(), filterByType(ingredients, type));
