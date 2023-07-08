@@ -32,22 +32,17 @@ import tacos.domain.repositories.IngredientRepository;
 @SessionAttributes("tacoOrder")
 public class DesignTacoController {
 
-
     final WebClient webClient;
 
-    final IngredientRepository ingredientRepository;
-
-    public DesignTacoController(WebClient webClient, IngredientRepository ingredientRepository) {
+    public DesignTacoController(WebClient webClient) {
         this.webClient = webClient;
-        this.ingredientRepository = ingredientRepository;
     }
 
     @ModelAttribute
-    public void addIngredientsToModel(Model model, @RegisteredOAuth2AuthorizedClient("taco-mvc") OAuth2AuthorizedClient authorizedClient) {
+    public void addIngredientsToModel(Model model) {
 
         List<Ingredient> ingredients = this.webClient.get()
                 .uri("/ingredients")
-                .attributes(ServerOAuth2AuthorizedClientExchangeFilterFunction.oauth2AuthorizedClient(authorizedClient))
                 .retrieve()
                 .bodyToFlux(Ingredient.class)
                 .collectList()
