@@ -24,7 +24,6 @@ import tacos.domain.entities.Taco;
 import tacos.domain.entities.TacoOrder;
 
 import jakarta.validation.Valid;
-import tacos.domain.repositories.IngredientRepository;
 
 @Slf4j
 @Controller
