@@ -1,7 +1,7 @@
 package com.example.domain.repositories;
 
 import com.example.domain.entities.Ingredient;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 
-public interface IngredientRepository extends JpaRepository<Ingredient, String> {
+public interface IngredientRepository extends ReactiveCrudRepository<Ingredient, String> {
 }
