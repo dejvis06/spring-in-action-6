@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import com.example.domain.entities.Ingredient;
 import com.example.domain.repositories.IngredientRepository;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping(path = "/api/ingredients", produces = "application/json")
@@ -17,13 +19,13 @@ public class IngredientController {
     }
 
     @GetMapping
-    public Iterable<Ingredient> allIngredients() {
+    public Flux<Ingredient> allIngredients() {
         return repository.findAll();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Ingredient saveIngredient(@RequestBody Ingredient ingredient) {
+    public Mono<Ingredient> saveIngredient(@RequestBody Ingredient ingredient) {
         return repository.save(ingredient);
     }
 

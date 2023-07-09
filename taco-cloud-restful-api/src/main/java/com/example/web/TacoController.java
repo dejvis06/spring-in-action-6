@@ -1,12 +1,15 @@
 package com.example.web;
 
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.example.domain.entities.Taco;
 import com.example.domain.repositories.TacoRepository;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.Optional;
 
@@ -21,15 +24,13 @@ public class TacoController {
     }
 
     @GetMapping(params = "recent")
-    public Iterable<Taco> recentTacos() {
-        PageRequest page = PageRequest.of(
-                0, 12, Sort.by("createdOn").descending());
-        return tacoRepository.findAll(page).getContent();
+    public Flux<Taco> recentTacos() {
+        return tacoRepository.findAll();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Taco> tacoById(@PathVariable("id") Long id) {
-        Optional<Taco> optTaco = tacoRepository.findById(id);
+        Optional<Taco> optTaco = tacoRepository.findById(id).blockOptional();
         if (optTaco.isPresent()) {
             return new ResponseEntity<>(optTaco.get(), HttpStatus.OK);
         }
@@ -38,7 +39,7 @@ public class TacoController {
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public Taco postTaco(@RequestBody Taco taco) {
+    public Mono<Taco> postTaco(@RequestBody Taco taco) {
         return tacoRepository.save(taco);
     }
 }
