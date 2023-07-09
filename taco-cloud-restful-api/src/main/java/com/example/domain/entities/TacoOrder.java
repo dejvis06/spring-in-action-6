@@ -1,6 +1,5 @@
 package com.example.domain.entities;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -13,11 +12,8 @@ import java.util.ArrayList;
 import lombok.Data;
 
 @Data
-@Entity
 public class TacoOrder {
 
-    @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
 
     @NotBlank(message = "Delivery name is required")
@@ -45,10 +41,8 @@ public class TacoOrder {
     @Digits(integer = 3, fraction = 0, message = "Invalid CVV")
     private String ccCVV;
 
-    @OneToMany(cascade = CascadeType.ALL)
     private List<Taco> tacos = new ArrayList<>();
 
-    @ManyToOne
     private User user;
 
     public void addTaco(Taco taco) {
