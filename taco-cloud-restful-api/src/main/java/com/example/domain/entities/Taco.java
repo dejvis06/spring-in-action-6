@@ -1,16 +1,17 @@
 package com.example.domain.entities;
 
-import java.time.Instant;
-import java.util.List;
+import java.util.Set;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import lombok.Data;
+import org.springframework.data.annotation.Id;
 
 @Data
 public class Taco {
 
+    @Id
     private Long id;
 
     @NotNull
@@ -19,9 +20,5 @@ public class Taco {
 
     @NotNull
     @Size(min = 1, message = "You must choose at least 1 ingredient")
-    private List<Ingredient> ingredients;
-
-    private Instant createdOn;
-
-    private Instant lastUpdatedOn;
+    private Set<Long> ingredientIds;
 }
