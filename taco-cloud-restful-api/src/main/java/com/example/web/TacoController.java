@@ -1,5 +1,6 @@
 package com.example.web;
 
+import jakarta.validation.Valid;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -39,7 +40,7 @@ public class TacoController {
 
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<Taco> postTaco(@RequestBody Taco taco) {
+    public Mono<Taco> postTaco(@RequestBody @Valid Taco taco) {
         return tacoRepository.save(taco);
     }
 }
