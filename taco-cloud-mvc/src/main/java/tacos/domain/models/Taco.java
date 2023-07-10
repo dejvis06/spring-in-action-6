@@ -1,4 +1,4 @@
-package tacos.domain.entities;
+package tacos.domain.models;
 
 import java.time.Instant;
 import java.util.Set;

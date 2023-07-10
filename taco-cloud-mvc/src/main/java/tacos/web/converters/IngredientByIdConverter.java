@@ -5,8 +5,8 @@ import java.util.Map;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
-import tacos.domain.entities.Ingredient;
-import tacos.domain.entities.Ingredient.Type;
+import tacos.domain.models.Ingredient;
+import tacos.domain.models.Ingredient.Type;
 
 
 @Component

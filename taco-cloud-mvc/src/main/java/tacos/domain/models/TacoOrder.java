@@ -1,4 +1,4 @@
-package tacos.domain.entities;
+package tacos.domain.models;
 
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
@@ -6,7 +6,6 @@ import jakarta.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.CreditCardNumber;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
 

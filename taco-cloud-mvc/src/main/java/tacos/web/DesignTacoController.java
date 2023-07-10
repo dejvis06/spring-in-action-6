@@ -1,11 +1,9 @@
 package tacos.web;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,13 +18,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.Errors;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-import tacos.domain.entities.Ingredient;
-import tacos.domain.entities.Taco;
-import tacos.domain.entities.TacoOrder;
+import tacos.domain.models.Ingredient;
+import tacos.domain.models.Taco;
+import tacos.domain.models.TacoOrder;
 import tacos.web.dtos.TacoDTO;
 import tacos.web.dtos.TacoOderDTO;
 
-import static tacos.domain.entities.Ingredient.*;
+import static tacos.domain.models.Ingredient.*;
 
 @Slf4j
 @Controller

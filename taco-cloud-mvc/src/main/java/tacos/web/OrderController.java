@@ -16,7 +16,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-import tacos.domain.entities.TacoOrder;
+import tacos.domain.models.TacoOrder;
 import tacos.web.dtos.TacoOderDTO;
 
 @Slf4j
