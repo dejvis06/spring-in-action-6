@@ -2,21 +2,36 @@ package com.example;
 
 import com.example.domain.entities.Ingredient;
 import com.example.domain.entities.Ingredient.Type;
-import com.example.domain.entities.Taco;
 import com.example.domain.repositories.IngredientRepository;
 import com.example.domain.repositories.TacoRepository;
+import io.r2dbc.spi.ConnectionFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.r2dbc.connection.init.ConnectionFactoryInitializer;
+import org.springframework.r2dbc.connection.init.ResourceDatabasePopulator;
 
 import java.util.Arrays;
 
 @SpringBootApplication
+@Slf4j
 public class TacoCloudRestfulApiApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(TacoCloudRestfulApiApplication.class, args);
+    }
+
+    @Bean
+    ConnectionFactoryInitializer initializer(ConnectionFactory connectionFactory) {
+
+        ConnectionFactoryInitializer initializer = new ConnectionFactoryInitializer();
+        initializer.setConnectionFactory(connectionFactory);
+        initializer.setDatabasePopulator(new ResourceDatabasePopulator(new ClassPathResource("schema.sql")));
+
+        return initializer;
     }
 
     @Bean
@@ -31,54 +46,30 @@ public class TacoCloudRestfulApiApplication {
 
     private static void addIngredientsAndTacos(IngredientRepository ingredientRepository, TacoRepository tacoRepository) {
         Ingredient flourTortilla = new Ingredient(
-                "FLTO", "Flour Tortilla", Type.WRAP);
+                null, "Flour Tortilla", Type.WRAP);
         Ingredient cornTortilla = new Ingredient(
-                "COTO", "Corn Tortilla", Type.WRAP);
+                null, "Corn Tortilla", Type.WRAP);
         Ingredient groundBeef = new Ingredient(
-                "GRBF", "Ground Beef", Type.PROTEIN);
+                null, "Ground Beef", Type.PROTEIN);
         Ingredient carnitas = new Ingredient(
-                "CARN", "Carnitas", Type.PROTEIN);
+                null, "Carnitas", Type.PROTEIN);
         Ingredient tomatoes = new Ingredient(
-                "TMTO", "Diced Tomatoes", Type.VEGGIES);
+                null, "Diced Tomatoes", Type.VEGGIES);
         Ingredient lettuce = new Ingredient(
-                "LETC", "Lettuce", Type.VEGGIES);
+                null, "Lettuce", Type.VEGGIES);
         Ingredient cheddar = new Ingredient(
-                "CHED", "Cheddar", Type.CHEESE);
+                null, "Cheddar", Type.CHEESE);
         Ingredient jack = new Ingredient(
-                "JACK", "Monterrey Jack", Type.CHEESE);
+                null, "Monterrey Jack", Type.CHEESE);
         Ingredient salsa = new Ingredient(
-                "SLSA", "Salsa", Type.SAUCE);
+                null, "Salsa", Type.SAUCE);
         Ingredient sourCream = new Ingredient(
-                "SRCR", "Sour Cream", Type.SAUCE);
+                null, "Sour Cream", Type.SAUCE);
 
-        ingredientRepository.save(flourTortilla);
-        ingredientRepository.save(cornTortilla);
-        ingredientRepository.save(groundBeef);
-        ingredientRepository.save(carnitas);
-        ingredientRepository.save(tomatoes);
-        ingredientRepository.save(lettuce);
-        ingredientRepository.save(cheddar);
-        ingredientRepository.save(jack);
-        ingredientRepository.save(salsa);
-        ingredientRepository.save(sourCream);
-
-        Taco taco1 = new Taco();
-        taco1.setName("Carnivore");
-        taco1.setIngredients(Arrays.asList(
-                flourTortilla, groundBeef, carnitas,
-                sourCream, salsa, cheddar));
-        tacoRepository.save(taco1);
-        Taco taco2 = new Taco();
-        taco2.setName("Bovine Bounty");
-        taco2.setIngredients(Arrays.asList(
-                cornTortilla, groundBeef, cheddar,
-                jack, sourCream));
-        tacoRepository.save(taco2);
-        Taco taco3 = new Taco();
-        taco3.setName("Veg-Out");
-        taco3.setIngredients(Arrays.asList(
-                flourTortilla, cornTortilla, tomatoes,
-                lettuce, salsa));
-        tacoRepository.save(taco3);
+        ingredientRepository.saveAll(Arrays.asList(
+                        flourTortilla, cornTortilla, groundBeef, carnitas, tomatoes, lettuce, cheddar, jack, salsa, sourCream))
+                .subscribe(ingredient -> {
+                    log.info("Created: {}", ingredient);
+                });
     }
 }
