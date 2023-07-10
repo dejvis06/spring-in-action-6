@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import lombok.*;
+import org.springframework.data.annotation.Id;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.
         SimpleGrantedAuthority;
@@ -18,6 +19,7 @@ public class User implements UserDetails {
 
     private static final long serialVersionUID = 1L;
 
+    @Id
     private Long id;
 
     private final String username;
