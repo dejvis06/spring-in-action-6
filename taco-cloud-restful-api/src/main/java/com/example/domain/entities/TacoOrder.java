@@ -6,14 +6,15 @@ import jakarta.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.CreditCardNumber;
 
-import java.util.List;
-import java.util.ArrayList;
+import java.util.Set;
 
 import lombok.Data;
+import org.springframework.data.annotation.Id;
 
 @Data
 public class TacoOrder {
 
+    @Id
     private Long id;
 
     @NotBlank(message = "Delivery name is required")
@@ -41,11 +42,8 @@ public class TacoOrder {
     @Digits(integer = 3, fraction = 0, message = "Invalid CVV")
     private String ccCVV;
 
-    private List<Taco> tacos = new ArrayList<>();
+    private Set<Long> tacoIds;
 
-    private User user;
+    private String username;
 
-    public void addTaco(Taco taco) {
-        this.tacos.add(taco);
-    }
 }
