@@ -4,26 +4,29 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
-import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
-import org.springframework.security.oauth2.client.web.reactive.function.client.ServerOAuth2AuthorizedClientExchangeFilterFunction;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
+
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.validation.Errors;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import tacos.domain.entities.Ingredient;
-import tacos.domain.entities.Ingredient.Type;
 import tacos.domain.entities.Taco;
 import tacos.domain.entities.TacoOrder;
+import tacos.web.dtos.TacoDTO;
+import tacos.web.dtos.TacoOderDTO;
 
-import jakarta.validation.Valid;
+import static tacos.domain.entities.Ingredient.*;
 
 @Slf4j
 @Controller
@@ -31,7 +34,7 @@ import jakarta.validation.Valid;
 @SessionAttributes("tacoOrder")
 public class DesignTacoController {
 
-    final WebClient webClient;
+    private final WebClient webClient;
 
     public DesignTacoController(WebClient webClient) {
         this.webClient = webClient;
@@ -39,7 +42,6 @@ public class DesignTacoController {
 
     @ModelAttribute
     public void addIngredientsToModel(Model model) {
-
         List<Ingredient> ingredients = this.webClient.get()
                 .uri("/ingredients")
                 .retrieve()
@@ -49,7 +51,8 @@ public class DesignTacoController {
 
         Type[] types = Type.values();
         for (Type type : types) {
-            model.addAttribute(type.toString().toLowerCase(), filterByType(ingredients, type));
+            model.addAttribute(type.toString().toLowerCase(),
+                    filterByType(ingredients, type));
         }
     }
 
@@ -72,10 +75,20 @@ public class DesignTacoController {
     public String processTaco(
             @Valid Taco taco, Errors errors,
             @ModelAttribute TacoOrder tacoOrder) {
-        log.info("Errors: {}", errors);
+
         if (errors.hasErrors()) {
+            log.info("Errors: {}", errors);
             return "design";
         }
+
+        TacoDTO dto = this.webClient.post()
+                .uri("/tacos")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Mono.just(createDTO(taco)), TacoOderDTO.class)
+                .retrieve()
+                .bodyToMono(TacoDTO.class)
+                .block();
+        taco.setId(dto.getId());
 
         tacoOrder.addTaco(taco);
         log.info("Processing taco: {}", taco);
@@ -83,10 +96,19 @@ public class DesignTacoController {
         return "redirect:/orders/current";
     }
 
-    private Iterable<Ingredient> filterByType(List<Ingredient> ingredients, Type type) {
+    private static TacoDTO createDTO(Taco taco) {
+        return TacoDTO.builder()
+                .name(taco.getName())
+                .ingredientIds(taco.getIngredients().stream().map(i -> Long.valueOf(i.getId())).collect(Collectors.toSet()))
+                .build();
+    }
+
+    private Iterable<Ingredient> filterByType(
+            List<Ingredient> ingredients, Type type) {
         return ingredients
                 .stream()
                 .filter(x -> x.getType().equals(type))
                 .collect(Collectors.toList());
     }
+
 }
